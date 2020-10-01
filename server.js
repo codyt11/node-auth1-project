@@ -22,24 +22,16 @@ const sessionConfig = {
   },
   resave: false,
   saveUninitialized: false,
-
-  store: new knexSessionStore(
-    {
-      knex: require("./data/db-config"),
-      tablename: "sessions",
-      sidfieldname: "sid",
-      createtable: true,
-      clearInterval: 1000 * 60 * 60
-    }
-  )
 }
 
+server.use(session(sessionConfig));
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
-server.use('/api/users', restricted, usersRouter);
+
+server.use('/api/users', usersRouter);
 server.use('/api/auth', authRouter);
-server.use(session(sessionConfig));
+
 
 server.get('/', (req, res) => {
     res.json({api: "up"});
